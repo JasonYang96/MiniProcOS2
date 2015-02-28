@@ -65,7 +65,7 @@ start(void)
 
 	// Set up hardware (schedos-x86.c)
 	segments_init();
-	interrupt_controller_init(0);
+	interrupt_controller_init(1);
 	console_clear();
 
 	// Initialize process descriptors as empty
@@ -245,7 +245,7 @@ schedule(void)
 
 	if (scheduling_algorithm == 3)
 	{
-		//TODO: SHARE PRIORITY
+		//find highest share
 	}
 
 

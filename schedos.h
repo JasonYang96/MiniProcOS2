@@ -22,4 +22,8 @@
 
 extern uint16_t * volatile cursorpos;
 
+// Lock used to prevent race conditions
+
+extern uint32_t lock;
+
 #endif
