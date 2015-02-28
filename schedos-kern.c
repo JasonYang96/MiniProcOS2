@@ -147,10 +147,10 @@ interrupt(registers_t *reg)
 		current->p_exit_status = reg->reg_eax;
 		schedule();
 
-	case INT_SYS_USER1:
-		// 'sys_user*' are provided for your convenience, in case you
-		// want to add a system call.
-		/* Your code here (if you want). */
+	case INT_SYS_PRIORITY:
+		// The 'sys_priority' system call initializes the p_priority var
+		// of a process.
+		current->p_priority = reg->reg_eax;
 		run(current);
 
 	case INT_SYS_USER2:
@@ -189,6 +189,9 @@ void
 schedule(void)
 {
 	pid_t pid = current->p_pid;
+	int k = 0, index = 0;
+	int priority[NPROCS];
+	memset(priority, -1, sizeof(priority));
 
 	if (scheduling_algorithm == 0)
 		while (1) {
@@ -203,11 +206,26 @@ schedule(void)
 
 	if (scheduling_algorithm == 1)
 	{
-		//run highest priority first
+		//run highest priority first based on pid
 		for (pid = 0; pid < NPROCS; pid++)
 		{
 			if (proc_array[pid].p_state == P_RUNNABLE)
 				run(&proc_array[pid]);
+		}
+	}
+
+	if (scheduling_algorithm == 2)
+	{
+		//if still alternating
+
+		//run highest priority first based on p_priority
+		int priority = 0;
+		for (k = 0; k < NPROCS; k++)
+		{
+			if (proc_array[k].p_priority == priority)
+			{
+			}
+				
 		}
 	}
 
