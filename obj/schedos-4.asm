@@ -11,7 +11,7 @@ static inline void
 sys_priority(int priority)
 {
 	asm volatile("int %0\n"
-  500000:	b8 01 00 00 00       	mov    $0x1,%eax
+  500000:	b8 04 00 00 00       	mov    $0x4,%eax
   500005:	cd 32                	int    $0x32
 sys_yield(void)
 {

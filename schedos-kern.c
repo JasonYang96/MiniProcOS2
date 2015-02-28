@@ -191,7 +191,6 @@ void
 schedule(void)
 {
 	pid_t pid = current->p_pid;
-	int k = 0;
 	unsigned int priority = 0xffffffff;
 
 	if (scheduling_algorithm == 0)
@@ -221,14 +220,15 @@ schedule(void)
 
 	if (scheduling_algorithm == 2)
 	{
+		int index = 1;
 		while (1) {
 			//run highest priority first based on p_priority
-			for (k = 1; k < NPROCS; k++)
+			for (; index < NPROCS; index++)
 			{
-				if (proc_array[k].p_state == P_RUNNABLE &&
-					proc_array[k].p_priority < priority)
+				if (proc_array[index].p_state == P_RUNNABLE &&
+					proc_array[index].p_priority < priority)
 				{
-					priority = proc_array[k].p_priority;
+					priority = proc_array[index].p_priority;
 				}
 			}
 			// search for proc with that priority
