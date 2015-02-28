@@ -61,12 +61,35 @@ sys_exit(int status)
     loop: goto loop; // Convince GCC that function truly does not return.
 }
 
+/*****************************************************************************
+ * sys_priority(priority)
+ *
+ *   Set current process' priority to priority.
+ *
+ *****************************************************************************/
+
 static inline void
 sys_priority(int priority)
 {
 	asm volatile("int %0\n"
 			:  : "i" (INT_SYS_PRIORITY),
 			     "a" (priority)
+			:  "cc", "memory");
+}
+
+/*****************************************************************************
+ * sys_share(share)
+ *
+ *   Set current process' share to share.
+ *
+ *****************************************************************************/
+
+static inline void
+sys_share(int share)
+{
+	asm volatile("int %0\n"
+			:  : "i" (INT_SYS_SHARE),
+			     "a" (share)
 			:  "cc", "memory");
 }
 

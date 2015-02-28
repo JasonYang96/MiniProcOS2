@@ -22,6 +22,10 @@
 #define PRIORITY 4
 #endif
 
+#ifndef SHARE
+#define SHARE 4
+#endif
+
 void
 start(void)
 {

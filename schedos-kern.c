@@ -150,13 +150,13 @@ interrupt(registers_t *reg)
 		schedule();
 
 	case INT_SYS_PRIORITY:
-		// The 'sys_priority' system call initializes the p_priority var
-		// of a process.
+		//Set current process' priority.
 		current->p_priority = reg->reg_eax;
 		run(current);
 
-	case INT_SYS_USER2:
-		/* Your code here (if you want). */
+	case INT_SYS_SHARE:
+		//Set current process' share.
+		current->p_share = reg->reg_eax;
 		run(current);
 
 	case INT_CLOCK:
@@ -206,10 +206,9 @@ schedule(void)
 		}
 	}
 
-	if (scheduling_algorithm == 1)
+	if (scheduling_algorithm == 1) //priority based on lowest pid
 	{
 		while (1) {
-			//run highest priority first based on pid
 			for (pid = 1; pid < NPROCS; pid++)
 			{
 				if (proc_array[pid].p_state == P_RUNNABLE)
@@ -218,11 +217,11 @@ schedule(void)
 		}
 	}
 
-	if (scheduling_algorithm == 2)
+	if (scheduling_algorithm == 2) //priority based on lowerst p_priority
 	{
 		int index = 1;
 		while (1) {
-			//run highest priority first based on p_priority
+			//find lowest p_priority
 			for (; index < NPROCS; index++)
 			{
 				if (proc_array[index].p_state == P_RUNNABLE &&
@@ -242,6 +241,11 @@ schedule(void)
 				}
 			}
 		}
+	}
+
+	if (scheduling_algorithm == 3)
+	{
+		//TODO: SHARE PRIORITY
 	}
 
 

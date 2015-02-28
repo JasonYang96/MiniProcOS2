@@ -237,13 +237,12 @@ schedule(void)
 		}
 	}
 
-	if (scheduling_algorithm == 1)
+	if (scheduling_algorithm == 1) //priority based on lowest pid
   1000cd:	83 f8 01             	cmp    $0x1,%eax
   1000d0:	75 33                	jne    100105 <schedule+0x69>
   1000d2:	ba 01 00 00 00       	mov    $0x1,%edx
 	{
 		while (1) {
-			//run highest priority first based on pid
 			for (pid = 1; pid < NPROCS; pid++)
 			{
 				if (proc_array[pid].p_state == P_RUNNABLE)
@@ -256,11 +255,11 @@ schedule(void)
   1000e9:	05 d4 71 10 00       	add    $0x1071d4,%eax
   1000ee:	50                   	push   %eax
   1000ef:	e8 19 04 00 00       	call   10050d <run>
+	}
 
-	if (scheduling_algorithm == 1)
+	if (scheduling_algorithm == 1) //priority based on lowest pid
 	{
 		while (1) {
-			//run highest priority first based on pid
 			for (pid = 1; pid < NPROCS; pid++)
   1000f4:	8d 42 01             	lea    0x1(%edx),%eax
   1000f7:	83 f8 04             	cmp    $0x4,%eax
@@ -269,11 +268,10 @@ schedule(void)
 		}
 	}
 
-	if (scheduling_algorithm == 1)
+	if (scheduling_algorithm == 1) //priority based on lowest pid
   1000fa:	89 c2                	mov    %eax,%edx
 	{
 		while (1) {
-			//run highest priority first based on pid
 			for (pid = 1; pid < NPROCS; pid++)
   1000fc:	7e d9                	jle    1000d7 <schedule+0x3b>
   1000fe:	b8 01 00 00 00       	mov    $0x1,%eax
@@ -283,7 +281,7 @@ schedule(void)
 		}
 	}
 
-	if (scheduling_algorithm == 2)
+	if (scheduling_algorithm == 2) //priority based on lowerst p_priority
   100105:	83 f8 02             	cmp    $0x2,%eax
   100108:	75 57                	jne    100161 <schedule+0xc5>
   10010a:	bb 01 00 00 00       	mov    $0x1,%ebx
@@ -298,7 +296,7 @@ schedule(void)
   100117:	eb 19                	jmp    100132 <schedule+0x96>
 		int index = 1;
 		while (1) {
-			//run highest priority first based on p_priority
+			//find lowest p_priority
 			for (; index < NPROCS; index++)
 			{
 				if (proc_array[index].p_state == P_RUNNABLE &&
@@ -309,11 +307,11 @@ schedule(void)
   10012b:	39 c6                	cmp    %eax,%esi
   10012d:	76 02                	jbe    100131 <schedule+0x95>
   10012f:	89 c6                	mov    %eax,%esi
-	if (scheduling_algorithm == 2)
+	if (scheduling_algorithm == 2) //priority based on lowerst p_priority
 	{
 		int index = 1;
 		while (1) {
-			//run highest priority first based on p_priority
+			//find lowest p_priority
 			for (; index < NPROCS; index++)
   100131:	43                   	inc    %ebx
   100132:	83 fb 04             	cmp    $0x4,%ebx
