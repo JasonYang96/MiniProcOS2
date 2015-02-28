@@ -26,6 +26,8 @@
 #define SHARE 4
 #endif
 
+//#define SYS_PRINT
+
 void
 start(void)
 {
@@ -35,11 +37,16 @@ start(void)
 	int i;
 
 	for (i = 0; i < RUNCOUNT; i++) {
-		while (compare_and_swap(&lock, 0, 1) != 1)
-			continue;
-		// Write characters to the console, yielding after each one.
-		*cursorpos++ = PRINTCHAR;
-		atomic_swap(&lock, 0);
+		#ifndef SYS_PRINT
+			sys_print(PRINTCHAR);
+		#endif
+		#ifdef SYSPRINT
+			while (compare_and_swap(&lock, 0, 1) != 1)
+				continue;
+			// Write characters to the console, yielding after each one.
+			*cursorpos++ = PRINTCHAR;
+			atomic_swap(&lock, 0);
+		#endif
 		sys_yield();
 	}
 

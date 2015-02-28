@@ -93,4 +93,21 @@ sys_share(int share)
 			:  "cc", "memory");
 }
 
+/*****************************************************************************
+ * sys_print(PRINTCHAR)
+ *
+ *   print PRINTCHAR to console
+ *
+ *****************************************************************************/
+
+static inline void
+sys_print(unsigned int printchar)
+{
+	asm volatile("int %0\n"
+			:  : "i" (INT_SYS_PRINT),
+			     "a" (printchar)
+			:  "cc", "memory");
+}
+
+
 #endif

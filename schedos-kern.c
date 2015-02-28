@@ -65,7 +65,7 @@ start(void)
 
 	// Set up hardware (schedos-x86.c)
 	segments_init();
-	interrupt_controller_init(1);
+	interrupt_controller_init(0);
 	console_clear();
 
 	// Initialize process descriptors as empty
@@ -149,6 +149,12 @@ interrupt(registers_t *reg)
 		current->p_exit_status = reg->reg_eax;
 		schedule();
 
+	case INT_CLOCK:
+		// A clock interrupt occurred (so an application exhausted its
+		// time quantum).
+		// Switch to the next runnable process.
+		schedule();
+
 	case INT_SYS_PRIORITY:
 		//Set current process' priority.
 		current->p_priority = reg->reg_eax;
@@ -159,11 +165,10 @@ interrupt(registers_t *reg)
 		current->p_share = reg->reg_eax;
 		run(current);
 
-	case INT_CLOCK:
-		// A clock interrupt occurred (so an application exhausted its
-		// time quantum).
-		// Switch to the next runnable process.
-		schedule();
+	case INT_SYS_PRINT:
+		//print next char
+		*cursorpos++ = reg->reg_eax;
+		run(current);
 
 	default:
 		while (1)

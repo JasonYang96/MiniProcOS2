@@ -52,39 +52,46 @@ compare_and_swap(uint32_t *addr, uint32_t expected, uint32_t desired)
 
 	for (i = 0; i < RUNCOUNT; i++) {
 		while (compare_and_swap(&lock, 0, 1) != 1)
-  20001f:	48                   	dec    %eax
-  200020:	75 f3                	jne    200015 <start+0x15>
-			continue;
-		// Write characters to the console, yielding after each one.
-		*cursorpos++ = PRINTCHAR;
-  200022:	a1 00 80 19 00       	mov    0x198000,%eax
-  200027:	66 c7 00 31 0c       	movw   $0xc31,(%eax)
-  20002c:	83 c0 02             	add    $0x2,%eax
-  20002f:	a3 00 80 19 00       	mov    %eax,0x198000
+  20001f:	83 f8 01             	cmp    $0x1,%eax
+  200022:	75 f1                	jne    200015 <start+0x15>
+ *****************************************************************************/
+
+static inline void
+sys_print(unsigned int printchar)
+{
+	asm volatile("int %0\n"
+  200024:	66 b8 31 0c          	mov    $0xc31,%ax
+  200028:	cd 34                	int    $0x34
 static inline uint32_t atomic_swap(uint32_t *addr, uint32_t val) __attribute__((always_inline));
 
 static inline uint32_t
 atomic_swap(uint32_t *addr, uint32_t val)
 {
 	asm volatile("xchgl %0, %1"
-  200034:	31 c0                	xor    %eax,%eax
-  200036:	87 05 04 80 19 00    	xchg   %eax,0x198004
-  20003c:	cd 30                	int    $0x30
+  20002a:	66 31 c0             	xor    %ax,%ax
+  20002d:	87 05 04 80 19 00    	xchg   %eax,0x198004
+sys_yield(void)
+{
+	// We call a system call by causing an interrupt with the 'int'
+	// instruction.  In weensyos, the type of system call is indicated
+	// by the interrupt number -- here, INT_SYS_YIELD.
+	asm volatile("int %0\n"
+  200033:	cd 30                	int    $0x30
 	sys_priority(PRIORITY);
 	sys_share(SHARE);
 	sys_yield();
 	int i;
 
 	for (i = 0; i < RUNCOUNT; i++) {
-  20003e:	42                   	inc    %edx
-  20003f:	81 fa 40 01 00 00    	cmp    $0x140,%edx
-  200045:	75 ce                	jne    200015 <start+0x15>
+  200035:	42                   	inc    %edx
+  200036:	81 fa 40 01 00 00    	cmp    $0x140,%edx
+  20003c:	75 d7                	jne    200015 <start+0x15>
 	// the kernel can look up that register value to read the argument.
 	// Here, the status is loaded into register %eax.
 	// You can load other registers with similar syntax; specifically:
 	//	"a" = %eax, "b" = %ebx, "c" = %ecx, "d" = %edx,
 	//	"S" = %esi, "D" = %edi.
 	asm volatile("int %0\n"
-  200047:	31 c0                	xor    %eax,%eax
-  200049:	cd 31                	int    $0x31
-  20004b:	eb fe                	jmp    20004b <start+0x4b>
+  20003e:	31 c0                	xor    %eax,%eax
+  200040:	cd 31                	int    $0x31
+  200042:	eb fe                	jmp    200042 <start+0x42>
