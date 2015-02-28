@@ -27,7 +27,7 @@ Exercise 4:
 Did you complete Exercise 4A, Exercise 4B, or both for extra credit?
 
 
-Exercise 5:
+Exercise 5: Process 4. It is the first number that is missing from the usual 1234 round robin pattern.
 
 
 (Exercise 6 is a coding exercise)

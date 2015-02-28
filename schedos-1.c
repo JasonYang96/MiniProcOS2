@@ -18,9 +18,15 @@
 #define PRINTCHAR	('1' | 0x0C00)
 #endif
 
+#ifndef PRIORITY
+#define PRIORITY 4
+#endif
+
 void
 start(void)
 {
+	sys_priority(PRIORITY);
+	sys_yield();
 	int i;
 
 	for (i = 0; i < RUNCOUNT; i++) {
