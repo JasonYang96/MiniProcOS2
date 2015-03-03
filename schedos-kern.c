@@ -41,6 +41,7 @@
 // Note that proc_array[0] is never used.
 // The first application process descriptor is proc_array[1].
 static process_t proc_array[NPROCS];
+static process_t lottery_array[NPROCS];
 
 // A pointer to the currently running process.
 // This is kept up to date by the run() function, in mpos-x86.c.
@@ -93,7 +94,7 @@ start(void)
 		proc->p_state = P_RUNNABLE;
 
 		proc->p_priority = 0;
-		proc->p_share = 0;
+		proc->p_share = 0xffffffff;
 		proc->p_iteration = 0;
 	}
 
@@ -165,6 +166,7 @@ interrupt(registers_t *reg)
 	case INT_SYS_SHARE:
 		//Set current process' share.
 		current->p_share = reg->reg_eax;
+		current->p_iteration--;
 		run(current);
 
 	case INT_SYS_PRINT:
@@ -199,7 +201,6 @@ schedule(void)
 {
 	pid_t pid = current->p_pid;
 	unsigned int priority = 0xffffffff;
-	unsigned int share = 0;
 	int index = 1;
 
 	if (scheduling_algorithm == 0) //round robin scheduling
@@ -254,55 +255,30 @@ schedule(void)
 	if (scheduling_algorithm == 3) //priority based on highest share
 	{
 		while (1) {
-			// //for each proc, run until iterations == share
-			// for (pid = 1; pid < NPROCS; pid = (pid + 1) % NPROCS)
-			// {
-			// 	cursorpos = console_printf(cursorpos, 0x100, "\nshare of 1 is:%d", proc_array[1].p_share);
-			// 	cursorpos = console_printf(cursorpos, 0x100, "\nshare of 2 is:%d", proc_array[2].p_share);
-			// 	cursorpos = console_printf(cursorpos, 0x100, "\nshare of 3 is:%d", proc_array[3].p_share);
-			// 	cursorpos = console_printf(cursorpos, 0x100, "\nshare of 4 is:%d", proc_array[4].p_share);
-			// 	cursorpos = console_printf(cursorpos, 0x100, "\npid: %d\n", pid);
-			// 	if (proc_array[pid].p_state == P_RUNNABLE)
-			// 	{
-			// 		cursorpos = console_printf(cursorpos, 0x100, "\niteration is:%d", proc_array[pid].p_iteration);
-			// 		cursorpos = console_printf(cursorpos, 0x100, "\nshareis:%d", proc_array[pid].p_share);
-			// 		for(; proc_array[pid].p_iteration < proc_array[pid].p_share;)
-			// 		{
-			// 			//cursorpos = console_printf(cursorpos, 0x100, "\ndone");
-			// 			//cursorpos = console_printf(cursorpos, 0x100, "\npid is:%d", pid);
-			// 			//cursorpos = console_printf(cursorpos, 0x100, "\niteration is:%d", proc_array[pid].p_iteration);
-			// 			//cursorpos = console_printf(cursorpos, 0x100, "\nshareis:%d", proc_array[pid].p_share);
+			//for each proc, run until iterations == share
+			for (pid = 1; pid < NPROCS; pid++)
+			{
+				if (proc_array[pid].p_state == P_RUNNABLE)
+				{
+					if(proc_array[pid].p_iteration < proc_array[pid].p_share)
+					{
+						proc_array[pid].p_iteration++;
+						run(&proc_array[pid]);
+					}
+				}
+			}
+			//reset iterations
+			for (pid = 1; pid < NPROCS; pid++)
+			{
+				proc_array[pid].p_iteration = 0;
+			}
+		}
+	}
 
-			// 			proc_array[pid].p_iteration++;
-			// 			run(&proc_array[pid]);
-			// 		}
-			// 		//cursorpos = console_printf(cursorpos, 0x100, "\npid is:%d", pid);
-			// 		//cursorpos = console_printf(cursorpos, 0x100, "\npid after for loop is:%d\n", pid);
-			// 	}
-			// 	//cursorpos = console_printf(cursorpos, 0x100, "\npid after for loop is:%d\n", pid);
-			// }
-			// //cursorpos = console_printf(cursorpos, 0x100, "\npid after for loop is:%d\n", pid);
-			//find lowest p_priority
-			for (; index < NPROCS; index++)
-			{
-				if (proc_array[index].p_state == P_RUNNABLE &&
-					proc_array[index].p_share > share)
-				{
-					share = proc_array[index].p_share;
-				}
-			}
-			// search for proc with that priority
-			// increment pid by 1 to "alternate"
-			for (proc_array[pid].p_iteration = 0; index < NPROCS; index++)
-			{
-				if (proc_array[index].p_state == P_RUNNABLE &&
-					proc_array[index].p_share >= share &&
-					proc_array[index].p_iteration < share)
-				{
-					run(&proc_array[pid]);
-				}
-				cursorpos = console_printf(cursorpos, 0x100, "\npid after for loop is:%d\n", pid);
-			}
+	if (scheduling_algorithm == 4) //lottery scheduling
+	{
+		while(1) {
+
 		}
 	}
 

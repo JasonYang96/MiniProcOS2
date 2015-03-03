@@ -15,19 +15,19 @@ start(void)
  *****************************************************************************/
 
 static inline void
-sys_priority(unsigned int priority)
+sys_share(unsigned int share)
 {
 	asm volatile("int %0\n"
-  200001:	b8 04 00 00 00       	mov    $0x4,%eax
-  200006:	cd 32                	int    $0x32
+  200001:	b8 01 00 00 00       	mov    $0x1,%eax
+  200006:	cd 33                	int    $0x33
  *****************************************************************************/
 
 static inline void
-sys_share(int share)
+sys_priority(unsigned int priority)
 {
 	asm volatile("int %0\n"
-  200008:	b0 03                	mov    $0x3,%al
-  20000a:	cd 33                	int    $0x33
+  200008:	b0 04                	mov    $0x4,%al
+  20000a:	cd 32                	int    $0x32
 sys_yield(void)
 {
 	// We call a system call by causing an interrupt with the 'int'
@@ -71,8 +71,8 @@ atomic_swap(uint32_t *addr, uint32_t val)
   200037:	31 c0                	xor    %eax,%eax
   200039:	87 05 04 80 19 00    	xchg   %eax,0x198004
   20003f:	cd 30                	int    $0x30
-	sys_priority(PRIORITY);
 	sys_share(SHARE);
+	sys_priority(PRIORITY);
 	sys_yield();
 	int i;
 

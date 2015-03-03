@@ -85,7 +85,7 @@ sys_priority(unsigned int priority)
  *****************************************************************************/
 
 static inline void
-sys_share(int share)
+sys_share(unsigned int share)
 {
 	asm volatile("int %0\n"
 			:  : "i" (INT_SYS_SHARE),

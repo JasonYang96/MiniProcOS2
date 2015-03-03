@@ -23,7 +23,7 @@
 #endif
 
 #ifndef SHARE
-#define SHARE 3
+#define SHARE 1
 #endif
 
 #define LOCK
@@ -31,8 +31,8 @@
 void
 start(void)
 {
-	sys_priority(PRIORITY);
 	sys_share(SHARE);
+	sys_priority(PRIORITY);
 	sys_yield();
 	int i;
 

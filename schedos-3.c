@@ -6,7 +6,7 @@
  *****************************************************************************/
 
 #define PRINTCHAR	('3' | 0x0900)
-#define PRIORITY 4
-#define SHARE 2
+#define PRIORITY 3
+#define SHARE 3
 
 #include "schedos-1.c"
