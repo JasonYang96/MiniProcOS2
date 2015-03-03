@@ -23,10 +23,10 @@
 #endif
 
 #ifndef SHARE
-#define SHARE 4
+#define SHARE 3
 #endif
 
-//#define SYS_PRINT
+#define LOCK
 
 void
 start(void)
@@ -37,11 +37,11 @@ start(void)
 	int i;
 
 	for (i = 0; i < RUNCOUNT; i++) {
-		#ifndef SYS_PRINT
+		#ifndef LOCK
 			sys_print(PRINTCHAR);
 		#endif
-		#ifdef SYSPRINT
-			while (compare_and_swap(&lock, 0, 1) != 1)
+		#ifdef LOCK
+			while (compare_and_swap(&lock, 0, 1) != 0)
 				continue;
 			// Write characters to the console, yielding after each one.
 			*cursorpos++ = PRINTCHAR;

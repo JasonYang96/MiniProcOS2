@@ -5,8 +5,8 @@ obj/schedos-3:     file format elf32-i386
 Disassembly of section .text:
 
 00400000 <start>:
-#define SHARE 4
-#endif
+
+#define LOCK
 
 void
 start(void)
@@ -15,7 +15,7 @@ start(void)
  *****************************************************************************/
 
 static inline void
-sys_priority(int priority)
+sys_priority(unsigned int priority)
 {
 	asm volatile("int %0\n"
   400001:	b8 04 00 00 00       	mov    $0x4,%eax
@@ -47,52 +47,45 @@ compare_and_swap(uint32_t *addr, uint32_t expected, uint32_t desired)
   400017:	89 d8                	mov    %ebx,%eax
   400019:	f0 0f b1 0d 04 80 19 	lock cmpxchg %ecx,0x198004
   400020:	00 
-	sys_share(SHARE);
-	sys_yield();
-	int i;
-
 	for (i = 0; i < RUNCOUNT; i++) {
-		while (compare_and_swap(&lock, 0, 1) != 1)
-  400021:	83 f8 01             	cmp    $0x1,%eax
-  400024:	75 f1                	jne    400017 <start+0x17>
- *****************************************************************************/
-
-static inline void
-sys_print(unsigned int printchar)
-{
-	asm volatile("int %0\n"
-  400026:	66 b8 33 09          	mov    $0x933,%ax
-  40002a:	cd 34                	int    $0x34
+		#ifndef LOCK
+			sys_print(PRINTCHAR);
+		#endif
+		#ifdef LOCK
+			while (compare_and_swap(&lock, 0, 1) != 0)
+  400021:	85 c0                	test   %eax,%eax
+  400023:	75 f2                	jne    400017 <start+0x17>
+				continue;
+			// Write characters to the console, yielding after each one.
+			*cursorpos++ = PRINTCHAR;
+  400025:	a1 00 80 19 00       	mov    0x198000,%eax
+  40002a:	66 c7 00 33 09       	movw   $0x933,(%eax)
+  40002f:	83 c0 02             	add    $0x2,%eax
+  400032:	a3 00 80 19 00       	mov    %eax,0x198000
 static inline uint32_t atomic_swap(uint32_t *addr, uint32_t val) __attribute__((always_inline));
 
 static inline uint32_t
 atomic_swap(uint32_t *addr, uint32_t val)
 {
 	asm volatile("xchgl %0, %1"
-  40002c:	66 31 c0             	xor    %ax,%ax
-  40002f:	87 05 04 80 19 00    	xchg   %eax,0x198004
-sys_yield(void)
-{
-	// We call a system call by causing an interrupt with the 'int'
-	// instruction.  In weensyos, the type of system call is indicated
-	// by the interrupt number -- here, INT_SYS_YIELD.
-	asm volatile("int %0\n"
-  400035:	cd 30                	int    $0x30
+  400037:	31 c0                	xor    %eax,%eax
+  400039:	87 05 04 80 19 00    	xchg   %eax,0x198004
+  40003f:	cd 30                	int    $0x30
 	sys_priority(PRIORITY);
 	sys_share(SHARE);
 	sys_yield();
 	int i;
 
 	for (i = 0; i < RUNCOUNT; i++) {
-  400037:	42                   	inc    %edx
-  400038:	81 fa 40 01 00 00    	cmp    $0x140,%edx
-  40003e:	75 d7                	jne    400017 <start+0x17>
+  400041:	42                   	inc    %edx
+  400042:	81 fa 40 01 00 00    	cmp    $0x140,%edx
+  400048:	75 cd                	jne    400017 <start+0x17>
 	// the kernel can look up that register value to read the argument.
 	// Here, the status is loaded into register %eax.
 	// You can load other registers with similar syntax; specifically:
 	//	"a" = %eax, "b" = %ebx, "c" = %ecx, "d" = %edx,
 	//	"S" = %esi, "D" = %edi.
 	asm volatile("int %0\n"
-  400040:	31 c0                	xor    %eax,%eax
-  400042:	cd 31                	int    $0x31
-  400044:	eb fe                	jmp    400044 <start+0x44>
+  40004a:	31 c0                	xor    %eax,%eax
+  40004c:	cd 31                	int    $0x31
+  40004e:	eb fe                	jmp    40004e <start+0x4e>

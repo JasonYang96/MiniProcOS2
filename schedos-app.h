@@ -69,7 +69,7 @@ sys_exit(int status)
  *****************************************************************************/
 
 static inline void
-sys_priority(int priority)
+sys_priority(unsigned int priority)
 {
 	asm volatile("int %0\n"
 			:  : "i" (INT_SYS_PRIORITY),

@@ -32,6 +32,7 @@ typedef struct process {
 	int p_exit_status;		// Process's exit status
 	unsigned int p_priority; // Process's priority
 	unsigned int p_share; //Process's share
+	unsigned int p_iteration; //Process's share iteration
 } process_t;
 
 

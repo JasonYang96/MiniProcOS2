@@ -22,7 +22,7 @@ Average wait time for scheduling_algorithm 0:
 Average wait time for scheduling_algorithm 1:
 
 
-Exercise 4:
+Exercise 4: both 4A and 4B
 
 Did you complete Exercise 4A, Exercise 4B, or both for extra credit?
 
@@ -38,3 +38,4 @@ Anything else you'd like us to know:
 
 
 Extra credit exercises:
+I did Exercise 8. I originally implemented synchronization using the atomic functions of x86sync.h. Another implementation for synchronization that I implemented was a system call, sys_print(), that prints a character to console. This can be toggled on by commenting out `#define LOCK` in schedos-1.c.
