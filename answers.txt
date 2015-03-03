@@ -34,8 +34,9 @@ Exercise 5: Process 4. It is the first number that is missing from the usual 123
 
 
 Anything else you'd like us to know:
-
-
+My 4B excercise implementation only works with the schedule code, schedos-1, and system calls together. I'm not sure how you will manually apply the priorities but I ask that you manually change the declarations of PRIORITY and SHARE. The reasoning is because my system call not only grabs share from %eax, it also decrements my iteration count (which I needed to do for the code I wrote in schedule() to work. My share implementation only works with all 3 of my code. If you substitute your own schedos-1.c and system calls, I'm not sure it will work.
 
 Extra credit exercises:
-I did Exercise 8. I originally implemented synchronization using the atomic functions of x86sync.h. Another implementation for synchronization that I implemented was a system call, sys_print(), that prints a character to console. This can be toggled on by commenting out `#define LOCK` in schedos-1.c.
+I did Excercise 7 by implementing a lottery scheduling system. I implemented my own srand() and rand() functions in lib.c and used those functions to "randomly" choose a pid that the processor would serve.
+
+I also did Exercise 8. I originally implemented synchronization using the atomic functions of x86sync.h. Another implementation for synchronization that I implemented was a system call, sys_print(), that prints a character to console. This can be toggled on by commenting out `#define LOCK` in schedos-1.c.

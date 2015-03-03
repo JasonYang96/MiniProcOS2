@@ -13,6 +13,10 @@ void *memset(void *x, int c, size_t n);
 size_t strlen(const char *s);
 size_t strnlen(const char *s, size_t maxlen);
 
+// rand, srand
+void srand(unsigned seed);
+int rand(void);
+
 /*****************************************************************************
  * va_list, va_start, va_arg, va_end
  *

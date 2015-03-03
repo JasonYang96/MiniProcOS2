@@ -103,7 +103,7 @@ start(void)
 	cursorpos = (uint16_t *) 0xB8000;
 
 	// Initialize the scheduling algorithm.
-	scheduling_algorithm = 3;
+	scheduling_algorithm = 4;
 
 	// Switch to the first process.
 	run(&proc_array[1]);
@@ -276,7 +276,12 @@ schedule(void)
 	if (scheduling_algorithm == 4) //lottery scheduling
 	{
 		while(1) {
+			do {
+				pid = rand()%NPROCS;
+			} while (pid == 0);
 
+			if (proc_array[pid].p_state == P_RUNNABLE)
+				run(&proc_array[pid]);
 		}
 	}
 
