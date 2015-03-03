@@ -94,7 +94,7 @@ start(void)
 		proc->p_state = P_RUNNABLE;
 
 		proc->p_priority = 0;
-		proc->p_share = 0xffffffff;
+		proc->p_share = 1;
 		proc->p_iteration = 0;
 	}
 
@@ -258,13 +258,11 @@ schedule(void)
 			//for each proc, run until iterations == share
 			for (pid = 1; pid < NPROCS; pid++)
 			{
-				if (proc_array[pid].p_state == P_RUNNABLE)
+				if (proc_array[pid].p_state == P_RUNNABLE &&
+					proc_array[pid].p_iteration < proc_array[pid].p_share)
 				{
-					if(proc_array[pid].p_iteration < proc_array[pid].p_share)
-					{
-						proc_array[pid].p_iteration++;
-						run(&proc_array[pid]);
-					}
+					proc_array[pid].p_iteration++;
+					run(&proc_array[pid]);
 				}
 			}
 			//reset iterations

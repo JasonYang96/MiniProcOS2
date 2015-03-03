@@ -18,7 +18,7 @@ static inline void
 sys_share(unsigned int share)
 {
 	asm volatile("int %0\n"
-  300001:	b8 02 00 00 00       	mov    $0x2,%eax
+  300001:	b8 01 00 00 00       	mov    $0x1,%eax
   300006:	cd 33                	int    $0x33
  *****************************************************************************/
 
