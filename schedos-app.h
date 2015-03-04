@@ -64,7 +64,7 @@ sys_exit(int status)
 /*****************************************************************************
  * sys_priority(priority)
  *
- *   Set current process' priority to priority.
+ *   Set current process' priority to priority. Excercise 4A
  *
  *****************************************************************************/
 
@@ -80,7 +80,7 @@ sys_priority(unsigned int priority)
 /*****************************************************************************
  * sys_share(share)
  *
- *   Set current process' share to share.
+ *   Set current process' share to share. Excercise 4B
  *
  *****************************************************************************/
 
@@ -96,7 +96,7 @@ sys_share(unsigned int share)
 /*****************************************************************************
  * sys_print(PRINTCHAR)
  *
- *   print PRINTCHAR to console
+ *   print PRINTCHAR to console Excercise 8
  *
  *****************************************************************************/
 

@@ -26,6 +26,8 @@
 #define SHARE 1
 #endif
 
+//comment out if you want to use lock system
+//include if you want to use write as a system call
 #define LOCK
 
 void
@@ -37,9 +39,12 @@ start(void)
 	int i;
 
 	for (i = 0; i < RUNCOUNT; i++) {
+		//The code for exercise 8 starts
 		#ifndef LOCK
 			sys_print(PRINTCHAR);
 		#endif
+		//The code for exercise 8 ends
+		//the code for exercise 6 starts
 		#ifdef LOCK
 			while (compare_and_swap(&lock, 0, 1) != 0)
 				continue;
@@ -47,6 +52,7 @@ start(void)
 			*cursorpos++ = PRINTCHAR;
 			atomic_swap(&lock, 0);
 		#endif
+		//the code for exercise 6 ends
 		sys_yield();
 	}
 

@@ -1,6 +1,7 @@
 #include "schedos-kern.h"
 #include "x86.h"
 #include "lib.h"
+#include <linux/random.h>
 
 /*****************************************************************************
  * schedos-kern
@@ -216,7 +217,7 @@ schedule(void)
 		}
 	}
 
-	if (scheduling_algorithm == 1) //priority based on lowest pid
+	if (scheduling_algorithm == 1) //priority based on lowest pid, exercise 2
 	{
 		while (1) {
 			for (pid = 1; pid < NPROCS; pid++)
@@ -227,7 +228,7 @@ schedule(void)
 		}
 	}
 
-	if (scheduling_algorithm == 2) //priority based on lowerst p_priority
+	if (scheduling_algorithm == 2) //priority based on lowerst p_priority, exercise 4A
 	{
 		while (1) {
 			//find lowest p_priority
@@ -252,7 +253,7 @@ schedule(void)
 		}
 	}
 
-	if (scheduling_algorithm == 3) //priority based on highest share
+	if (scheduling_algorithm == 3) //priority based on highest share, exercise 4B
 	{
 		while (1) {
 			//for each proc, run until iterations == share
@@ -273,7 +274,7 @@ schedule(void)
 		}
 	}
 
-	if (scheduling_algorithm == 4) //lottery scheduling
+	if (scheduling_algorithm == 4) //lottery scheduling, exercise 7
 	{
 		while(1) {
 			do {

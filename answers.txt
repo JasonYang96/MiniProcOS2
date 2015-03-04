@@ -10,7 +10,7 @@ Response to Exercise 1:
 The name of the scheduling algorithm is: Round Robin
 
 
-(Exercise 2 is a coding exercise)
+(Exercise 2 is a coding exercise): scheduling algorithm 1
 
 
 Response to Exercise 3:
@@ -22,7 +22,7 @@ Average wait time for scheduling_algorithm 0: (0+1+2+3)/4 = 1.5 ms
 Average wait time for scheduling_algorithm 1: (0+320+640+960)/4 = 480 ms
 
 
-Exercise 4: both 4A and 4B
+Exercise 4: both 4A and 4B, scheduling algorithm 2 and 3 respectively
 
 Did you complete Exercise 4A, Exercise 4B, or both for extra credit?
 
@@ -30,11 +30,11 @@ Did you complete Exercise 4A, Exercise 4B, or both for extra credit?
 Exercise 5: Process 4. It is the first number that is missing from the usual 1234 round robin pattern.
 
 
-(Exercise 6 is a coding exercise)
+(Exercise 6 is a coding exercise): located in schedos-1.c
 
 
 Anything else you'd like us to know:
-My 4B excercise implementation only works with the schedule code, schedos-1, and system calls together. I'm not sure how you will manually apply the priorities but I ask that you manually change the declarations of PRIORITY and SHARE. The reasoning is because my system call not only grabs share from %eax, it also decrements my iteration count (which I needed to do for the code I wrote in schedule() to work. My share implementation only works with all 3 of my code. If you substitute your own schedos-1.c and system calls, I'm not sure it will work.
+My 4B excercise implementation only works with the schedule code, schedos-1, and system calls together. I'm not sure how you will manually apply the priorities but I ask that you manually change the declarations of PRIORITY and SHARE. The reasoning is because my system call not only grabs share from %eax, it also decrements my iteration count (which I needed to do for the code I wrote in schedule() to work. My share implementation only works with all 3 parts of my code. If you substitute your own schedos-1.c and system calls, I'm not sure it will work.
 
 Extra credit exercises:
 I did Excercise 7 by implementing a lottery scheduling system. I implemented my own srand() and rand() functions in lib.c and used those functions to "randomly" choose a pid that the processor would serve.
