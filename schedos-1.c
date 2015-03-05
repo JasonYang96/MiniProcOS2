@@ -18,16 +18,19 @@
 #define PRINTCHAR	('1' | 0x0C00)
 #endif
 
+//for Exercise 4A
 #ifndef PRIORITY
 #define PRIORITY 4
 #endif
 
+//for Exercise 4B
 #ifndef SHARE
 #define SHARE 1
 #endif
 
 //comment out if you want to use lock system
 //include if you want to use write as a system call
+//for Exercise 8
 #define LOCK
 
 void

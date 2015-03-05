@@ -8,6 +8,23 @@
  *
  *****************************************************************************/
 
+// rand, srand
+static int rand_seed_set;
+static unsigned rand_seed;
+
+void srand(unsigned seed) {
+    rand_seed = seed;
+    rand_seed_set = 1;
+}
+
+int rand(unsigned int seed) {
+    if (!rand_seed_set)
+        srand(seed);
+    rand_seed = rand_seed * 1664525U + 1013904223U;
+    return rand_seed & 0x7FFFFFFF;
+}
+
+
 /*****************************************************************************
  * memcpy, memmove, memset, and strlen
  *
@@ -64,24 +81,6 @@ strnlen(const char *s, size_t maxlen)
 		++n;
 	return n;
 }
-
-// // rand, srand
-
-// static int rand_seed_set;
-// static unsigned rand_seed;
-
-// void srand(unsigned seed) {
-//     rand_seed = seed;
-//     rand_seed_set = 1;
-// }
-
-// int rand(void) {
-//     if (!rand_seed_set)
-//         srand(819234718U);
-//     rand_seed = rand_seed * 1664525U + 1013904223U;
-//     return rand_seed & 0x7FFFFFFF;
-// }
-
 
 /*****************************************************************************
  * console_vprintf

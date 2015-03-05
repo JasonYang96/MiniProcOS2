@@ -1,7 +1,6 @@
 #include "schedos-kern.h"
 #include "x86.h"
 #include "lib.h"
-#include <linux/random.h>
 
 /*****************************************************************************
  * schedos-kern
@@ -51,6 +50,8 @@ process_t *current;
 // The preferred scheduling algorithm.
 int scheduling_algorithm;
 
+//Used for lottery algorithm
+static unsigned int yield_count = 0;
 
 /*****************************************************************************
  * start
@@ -104,7 +105,7 @@ start(void)
 	cursorpos = (uint16_t *) 0xB8000;
 
 	// Initialize the scheduling algorithm.
-	scheduling_algorithm = 4;
+	scheduling_algorithm = 0;
 
 	// Switch to the first process.
 	run(&proc_array[1]);
@@ -139,6 +140,7 @@ interrupt(registers_t *reg)
 	case INT_SYS_YIELD:
 		// The 'sys_yield' system call asks the kernel to schedule
 		// the next process.
+		yield_count++;
 		schedule();
 
 	case INT_SYS_EXIT:
@@ -159,17 +161,20 @@ interrupt(registers_t *reg)
 		// Switch to the next runnable process.
 		schedule();
 
+	//Exercise 4A
 	case INT_SYS_PRIORITY:
 		//Set current process' priority.
 		current->p_priority = reg->reg_eax;
 		run(current);
 
+	//Exercise 4B
 	case INT_SYS_SHARE:
 		//Set current process' share.
 		current->p_share = reg->reg_eax;
 		current->p_iteration--;
 		run(current);
 
+	//Exercise 8
 	case INT_SYS_PRINT:
 		//print next char
 		*cursorpos++ = reg->reg_eax;
@@ -277,10 +282,7 @@ schedule(void)
 	if (scheduling_algorithm == 4) //lottery scheduling, exercise 7
 	{
 		while(1) {
-			do {
-				pid = rand()%NPROCS;
-			} while (pid == 0);
-
+			pid = rand(yield_count)%NPROCS;
 			if (proc_array[pid].p_state == P_RUNNABLE)
 				run(&proc_array[pid]);
 		}

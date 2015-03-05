@@ -15,7 +15,7 @@ size_t strnlen(const char *s, size_t maxlen);
 
 // rand, srand
 void srand(unsigned seed);
-int rand(void);
+int rand(unsigned int seed);
 
 /*****************************************************************************
  * va_list, va_start, va_arg, va_end
